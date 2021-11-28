@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="navy_500">#64869B</color>
+    <color name="navy_700">#37596D</color>
+    <color name="navy_900">#073042</color>
+    <color name="green_300">#3DDC84</color>
+    <color name="green_500">#006064</color>
+    <color name="green_900">#006064</color>
+</resources>
