@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
 
         var dateFormat= SimpleDateFormat("yyyy-MM-dd")
 
-        nasaApodViewModel.getNasaApodData(dateFormat.format(mCalendar.time))
+        ngit asaApodViewModel.getNasaApodData(dateFormat.format(mCalendar.time))
         pb_loading.visibility = View.VISIBLE
 
     }
