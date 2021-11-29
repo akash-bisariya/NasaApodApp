@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 import android.R.attr.startYear
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
@@ -24,12 +25,14 @@ import android.os.Build
 import android.view.View
 import android.widget.DatePicker
 import androidx.annotation.RequiresApi
+import com.nasaapodapp.model.data.NasaApod
 import java.text.DateFormat
 import java.util.*
 
 
 class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     private var swicthingTheme: Boolean = false
+    private var mNasaApodData:NasaApod? =null
 
     @Inject
     lateinit var nasaApodViewModel: NasaApodViewModel
@@ -44,26 +47,27 @@ class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
         nasaApodViewModel = getViewModel { NasaApodViewModel(nasaApodRepository) }
         nasaApodViewModel.getNasaApodData(getTodayDate())
         pb_loading.visibility = View.VISIBLE
 
         nasaApodViewModel.nasaApodData.observe(this, Observer {
             pb_loading.visibility = View.GONE
-
+            mNasaApodData = it
             Picasso.get().load(it.url).into(iv_apod)
             tv_title.text = it.title
             tv_date.text = it.date
             tv_explanation.text = it.explanation
             iv_heart.visibility = View.VISIBLE
+
         })
 
         nasaApodViewModel.error.observe(this, Observer {
             pb_loading.visibility = View.GONE
             iv_heart.visibility = View.GONE
             if(!swicthingTheme)
-                AlertDialog.Builder(this).setTitle(getString(R.string.txt_error)).setPositiveButton("ok",
-                { dialogInterface, i ->  dialogInterface.cancel() }).show()
+                showMessageDialog(getString(R.string.txt_error))
         })
 
         btn_search.setOnClickListener {
@@ -73,6 +77,10 @@ class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
                 this, this@MainActivity,cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH)
             )
             datePickerDialog.show()
+        }
+
+        iv_heart.setOnClickListener {
+            saveToSharedPreference()
         }
 
         btn_switch.setOnClickListener{
@@ -85,6 +93,28 @@ class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
             }
         }
 
+    }
+
+    private fun showMessageDialog(s: String) {
+        AlertDialog.Builder(this).setTitle(s).setPositiveButton("ok",
+            { dialogInterface, i ->  dialogInterface.cancel() }).show()
+    }
+
+    /**
+     * Saving favourites data
+     */
+    private fun saveToSharedPreference() {
+        val sharedPref = getSharedPreferences(
+            getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+        with (sharedPref.edit()) {
+            putString(getString(R.string.apod_image), mNasaApodData!!.url)
+            putString(getString(R.string.apod_title), mNasaApodData!!.title)
+            putString(getString(R.string.apod_date), mNasaApodData!!.date)
+            putString(getString(R.string.apod_expl), mNasaApodData!!.explanation)
+            apply()
+        }
+
+        showMessageDialog(getString(R.string.txt_saved_data))
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
