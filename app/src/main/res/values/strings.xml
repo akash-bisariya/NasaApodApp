@@ -7,4 +7,10 @@
     <string name="txt_switch_theme">Switch Theme</string>
     <string name="txt_search_by_date">Search By Date</string>
     <string name="txt_error">Error in fetching data</string>
+    <string name="preference_file_key">preference_nasa_app</string>
+    <string name="apod_image">apod_image</string>
+    <string name="apod_title">apod_title</string>
+    <string name="apod_expl">apod_explanation</string>
+    <string name="apod_date">apod_date</string>
+    <string name="txt_saved_data">Image has been added in favourites</string>
 </resources>
