@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android_Projects/NasaApodApp/app/src/main/res/drawable/baseline_heart_broken_black_24dp.xml" value="0.25833333333333336" />
         <entry key="..\:/Android_Projects/NasaApodApp/app/src/main/res/layout/activity_home.xml" value="0.176" />
         <entry key="..\:/Android_Projects/NasaApodApp/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Android_Projects/NasaApodApp/app/src/main/res/layout/fragment_home.xml" value="0.17083333333333334" />

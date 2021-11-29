@@ -55,10 +55,12 @@ class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
             tv_title.text = it.title
             tv_date.text = it.date
             tv_explanation.text = it.explanation
+            iv_heart.visibility = View.VISIBLE
         })
 
         nasaApodViewModel.error.observe(this, Observer {
             pb_loading.visibility = View.GONE
+            iv_heart.visibility = View.GONE
             if(!swicthingTheme)
                 AlertDialog.Builder(this).setTitle(getString(R.string.txt_error)).setPositiveButton("ok",
                 { dialogInterface, i ->  dialogInterface.cancel() }).show()
