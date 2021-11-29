@@ -4,11 +4,13 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.Observer
 import com.nasaapodapp.R
 import com.nasaapodapp.base.NasaApodApplication
 import com.nasaapodapp.base.getViewModel
 import com.nasaapodapp.model.repository.NasaApodRepository
 import com.nasaapodapp.viewmodel.NasaApodViewModel
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -25,6 +27,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         nasaApodViewModel = getViewModel { NasaApodViewModel(nasaApodRepository) }
+
+        nasaApodViewModel.nasaApodData.observe(this, Observer {
+            Picasso.get().load(it.url).into(iv_apod)
+            tv_title.text = it.title
+            tv_date.text = it.date
+            tv_explanation.text = it.explanation
+        })
 
         btn_switch.setOnClickListener{
             val isNightTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
