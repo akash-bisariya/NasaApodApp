@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
             mNasaApodData = it
             Picasso.get().load(it.url).into(iv_apod)
             tv_title.text = it.title
-            tv_date.text = it.date
+            tv_date.text = getFormattedDate(it.date.toString())
             tv_explanation.text = it.explanation
             iv_heart.visibility = View.VISIBLE
 
@@ -103,18 +103,28 @@ class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     /**
      * Saving favourites data
      */
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun saveToSharedPreference() {
         val sharedPref = getSharedPreferences(
             getString(R.string.preference_file_key), Context.MODE_PRIVATE)
         with (sharedPref.edit()) {
             putString(getString(R.string.apod_image), mNasaApodData!!.url)
             putString(getString(R.string.apod_title), mNasaApodData!!.title)
-            putString(getString(R.string.apod_date), mNasaApodData!!.date)
+            putString(getString(R.string.apod_date), getFormattedDate(mNasaApodData!!.date))
             putString(getString(R.string.apod_expl), mNasaApodData!!.explanation)
             apply()
         }
 
         showMessageDialog(getString(R.string.txt_saved_data))
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun getFormattedDate(date: String): String? {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd")
+        val outputFormat = SimpleDateFormat("dd-MMM-yyyy")
+        var dateFormat= SimpleDateFormat("dd-MMM-yyyy")
+        val dates = inputFormat.parse(date);
+        return outputFormat.format(dates)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -134,7 +144,7 @@ class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
 
         var dateFormat= SimpleDateFormat("yyyy-MM-dd")
 
-        ngit asaApodViewModel.getNasaApodData(dateFormat.format(mCalendar.time))
+        nasaApodViewModel.getNasaApodData(dateFormat.format(mCalendar.time))
         pb_loading.visibility = View.VISIBLE
 
     }
