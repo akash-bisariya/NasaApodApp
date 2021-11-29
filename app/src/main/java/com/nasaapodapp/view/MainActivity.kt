@@ -16,9 +16,12 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 import android.R.attr.startYear
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.os.Build
+import android.view.View
 import android.widget.DatePicker
 import androidx.annotation.RequiresApi
 import java.text.DateFormat
@@ -26,6 +29,8 @@ import java.util.*
 
 
 class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
+    private var swicthingTheme: Boolean = false
+
     @Inject
     lateinit var nasaApodViewModel: NasaApodViewModel
 
@@ -41,12 +46,22 @@ class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
 
         nasaApodViewModel = getViewModel { NasaApodViewModel(nasaApodRepository) }
         nasaApodViewModel.getNasaApodData(getTodayDate())
+        pb_loading.visibility = View.VISIBLE
 
         nasaApodViewModel.nasaApodData.observe(this, Observer {
+            pb_loading.visibility = View.GONE
+
             Picasso.get().load(it.url).into(iv_apod)
             tv_title.text = it.title
             tv_date.text = it.date
             tv_explanation.text = it.explanation
+        })
+
+        nasaApodViewModel.error.observe(this, Observer {
+            pb_loading.visibility = View.GONE
+            if(!swicthingTheme)
+                AlertDialog.Builder(this).setTitle(getString(R.string.txt_error)).setPositiveButton("ok",
+                { dialogInterface, i ->  dialogInterface.cancel() }).show()
         })
 
         btn_search.setOnClickListener {
@@ -59,6 +74,7 @@ class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         }
 
         btn_switch.setOnClickListener{
+            swicthingTheme = true
             when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                 Configuration.UI_MODE_NIGHT_YES ->
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -87,6 +103,7 @@ class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         var dateFormat= SimpleDateFormat("yyyy-MM-dd")
 
         nasaApodViewModel.getNasaApodData(dateFormat.format(mCalendar.time))
+        pb_loading.visibility = View.VISIBLE
 
     }
 }

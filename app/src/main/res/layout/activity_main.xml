@@ -30,6 +30,16 @@
         android:layout_margin="@dimen/dimen_view_padding"
         />
 
+    <ProgressBar
+        android:id="@+id/pb_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btn_switch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        android:layout_margin="@dimen/dimen_view_padding"/>
+
     <ImageView
         android:id="@+id/iv_apod"
         android:layout_width="match_parent"

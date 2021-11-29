@@ -6,4 +6,5 @@
     <string name="title_notifications">Notifications</string>
     <string name="txt_switch_theme">Switch Theme</string>
     <string name="txt_search_by_date">Search By Date</string>
+    <string name="txt_error">Error in fetching data</string>
 </resources>
